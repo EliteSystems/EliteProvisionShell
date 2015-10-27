@@ -1,0 +1,11 @@
+#!/bin/bash
+
+(
+	# Installation de rubyMine
+	name="rubyMine"
+	url="http://download-cf.jetbrains.com/ruby/RubyMine-7.1.4.tar.gz"
+	installPath="$HOME/Developpements/Applications/JetBrains"
+	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
+		configurePackage --packageName="$name" --packagePath="$installPath"
+	fi
+)

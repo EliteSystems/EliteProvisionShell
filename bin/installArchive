@@ -1,0 +1,72 @@
+#!/bin/bash
+
+function installArchive {
+	(
+		local paramName
+		local paramUrl
+		local paramPath
+
+		for param in "$@"; do
+			case "$param" in
+				--archiveName=*)
+					paramName=${param#-*=} ;;
+				--archiveUrl=*)
+					paramUrl=${param#-*=} ;;
+				--archivePath=*)
+					paramPath=${param#-*=} ;;
+			esac
+		done
+
+		local name=${paramName}
+		debugVar --var="name" --value="$name"
+		local url=${paramUrl}
+		debugVar --var="url" --value="$url"
+		local path=${paramPath:-$HOME}
+		debugVar --var="path" --value="$path"
+
+		# Installation Package .tar.gz
+		if  [ ! -d "$path/$name" ] || $globalForce; then
+
+			logVerboseNiv1 --text="Installation de $name"
+
+			# Création du répertoire de destination
+			if [ ! -d "$pat"h ]; then
+				mkdir --parents "$path"
+			fi
+
+			# Téléchargement de l'archive
+			if  [ ! -e "$globalTemporaryPath/$name.tar.gz" ]; then
+				logVerboseNiv2 --text="Start download"
+				wget --no-verbose --output-document "$globalTemporaryPath/$name.tar.gz" "$url" > /dev/null
+				logVerboseNiv2 --text="Stop download"
+			fi
+
+			# Suppression du répertoire .old
+			if [ -d "$path/$name.old" ]; then
+				rm --dir --force --recursive "$path/$name.old/"
+			fi
+
+			# Création du répertoire .old
+			if [ -d "$path/$name" ]; then
+				mv "$path/$name" "$path/$name.old"
+			fi
+
+			# Installation
+			mkdir "$path/$name"
+			tar xzf "$globalTemporaryPath/$name.tar.gz" -C "$path/$name" --strip-components 1
+			chmod -Rf 755 "$path/$name"
+
+			# Erreur
+			if [ ! -d "$path/$name" ]; then
+				logError --text="Erreur lors de l'installation de $name"
+				return 1
+			fi
+
+			return 0
+		fi
+
+		logVerboseNiv1 --text="$name already installed"
+
+		return 2
+	)
+}

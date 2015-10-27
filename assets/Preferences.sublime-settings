@@ -1,0 +1,9 @@
+{
+	"color_scheme": "Packages/Predawn/predawn.tmTheme",
+	"theme": "predawn-DEV.sublime-theme",
+	"predawn_sidebar_small": true,
+	"predawn_tabs_small": true,
+	"predawn_findreplace_small": true,
+	"predawn_quick_panel_small": true,
+	"predawn_tabs_active_underline": true
+}

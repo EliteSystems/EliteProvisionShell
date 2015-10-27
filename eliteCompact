@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Crée un fichier qui occupera tout l’espace libre en étant rempli de zéros et ensuite l'efface
+sudo cat /dev/zero > zeros ; sync ; rm zeros
+
+sudo dd if=/dev/zero of=/EMPTY bs=1M
+sudo rm -f /EMPTY

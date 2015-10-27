@@ -1,0 +1,11 @@
+#!/bin/bash
+
+(
+	# Installation utilitaire Tweak
+	name="elementary-tweaks"
+	repository="deb http://i-hate-farms.github.io/spores trusty main"
+	key="http://i-hate-farms.github.io/spores/key/deb.gpg.key"
+	if installPackage --packageName="$name" --repository="$repository" --key="$key" || $globalConfigure; then
+		configurePackage --packageName="$name"
+	fi
+)

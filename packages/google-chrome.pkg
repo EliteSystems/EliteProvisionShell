@@ -1,0 +1,21 @@
+#!/bin/bash
+
+(
+	# Installation Google Chrome
+	nameLib1="libxss1"
+	nameLib2="libappindicator1"
+	nameLib3="libindicator7"
+
+	installPackage --packageName="$nameLib1"
+	installPackage --packageName="$nameLib2"
+	installPackage --packageName="$nameLib3"
+
+	if isInstalledPackage --packageName="$nameLib1" && isInstalledPackage --packageName="$nameLib2" && isInstalledPackage --packageName="$nameLib3"; then
+		name="google-chrome-stable"
+		url="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+		if installDeb --packageName="$name" --packageUrl="$url" || $globalConfigure; then
+			name="google-chrome"
+			configurePackage --packageName="$name"
+		fi
+	fi
+)

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+(
+	# Installation serveur bittorrent Transmission
+	name="transmission-daemon"
+	if installPackage --packageName="$name" || $globalConfigure; then
+		sudo service transmission-daemon stop
+		name="transmission"
+		configurePackage --packageName="$name"
+		sudo service transmission-daemon start
+	fi
+)

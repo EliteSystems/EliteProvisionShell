@@ -1,0 +1,11 @@
+#!/bin/bash
+
+(
+	# dK 8 Oracle
+	name=oracle-java8-installer
+	repository="ppa:webupd8team/java"
+	if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+		name="jdk8"
+		configurePackage --packageName="$name"
+	fi
+)

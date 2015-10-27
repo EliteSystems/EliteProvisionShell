@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Nettoyage complet
+function cleanAll {
+	logSeparator --text="Nettoyage" --color="${globalRouge}"
+	cleanApt
+	cleanDpkg
+	cleanSavedUserFiles
+	cleanOldFiles
+	cleanTmpPath
+}
+
+# Nettoyage cache Apt et loiciels inutiles
+function cleanApt {
+	sudo apt-get clean --yes && sudo apt-get autoremove --purge --yes
+}
+
+# Nettoyage des résidus des logiciels supprimés
+function cleanDpkg {
+	sudo dpkg -P $(dpkg -l | grep "^rc" | tr -s ' ' | cut -d ' ' -f 2)
+}
+
+# Nettoyage des fichiers de sauvegarde du répertoire utilisateur (NE PAS FAIRE DE SUDO !!!)
+function cleanSavedUserFiles {
+	find ~/ -name '*~' -print0 | xargs -0 rm > /dev/null
+}
+
+# Nettoyage des fichiers .old du répertoire utilisateur (NE PAS FAIRE DE SUDO !!!)
+function cleanOldFiles {
+	find ~/ -name '*.old' -print0 | xargs -0 sudo rm > /dev/null
+}
+
+# Nettoyage du répertoire temporaire de travail (NE PAS FAIRE DE SUDO !!!)
+function cleanTmpPath {
+	rm -rf "$globalTemporaryPath" > /dev/null
+}

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+(
+	# Installation utilitaire Conky Manager
+	name="conky-manager"
+	repository="ppa:teejee2008/ppa"
+	if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+		name="conky"
+		configurePackage --packageName="$name"
+	fi
+)

@@ -1,0 +1,144 @@
+#!/bin/bash
+
+function logInfo {
+
+	local paramText
+	local paramColor
+	
+	for param in "$@"; do
+		case "$param" in
+			--text=*)
+				paramText=${param#-*=};;
+			--color=*)
+				paramColor=${param#-*=};;
+		esac
+	done
+	local text=${paramText:-`caller 0`}
+	local color=${paramColor:-$globalResetColor}
+	
+	echo -e "${color}${text}${globalResetColor}"
+}
+
+function logSeparator {
+
+	function pair {
+		let "result = $1 % 2"
+		if [[ $result = 0 ]]; then
+			 # 0 = true
+			return 0
+		else 
+    		# 1 = false
+			return 1
+		fi
+	}
+
+	function initialisation {
+		if pair $nbChaine; then
+			if pair $lenText; then 
+				init=1 
+			else 
+				init=0 
+			fi
+		else
+			if pair $lenText; then 
+				init=0
+			else 
+				init=1 
+			fi
+		fi
+	}
+
+	function stringSeparator {
+		let "nbSeparator = ($nbChaine - $lenText) / 2"
+		caracSeparator=$1
+		incCaracSeparator=$caracSeparator
+		for (( i = $2; i < $nbSeparator; i++ )); do
+			incCaracSeparator=$incCaracSeparator$caracSeparator
+		done
+
+		echo $incCaracSeparator
+	}
+
+	function stringSeparatorStart {
+		stringSeparator $caracSeparatorStart 0
+	}
+
+	function stringSeparatorEnd {
+		initialisation
+		stringSeparator $caracSeparatorEnd $init
+	}
+
+	local paramText
+	local paramColor
+	local paramSize
+	local paramCar
+	local paramCarStart
+	local paramCarEnd
+	
+	for param in "$@"; do
+		case "$param" in
+			--text=*)
+				paramText=${param#-*=};;
+			--color=*)
+				paramColor=${param#-*=};;
+			--size=*)
+				paramSize=${param#-*=};;
+			--separator=*)
+				paramCar=${param#-*=};;
+			--separatorStart=*)
+				paramCarStart=${param#-*=};;
+			--separatorEnd=*)
+				paramCarEnd=${param#-*=};;
+		esac
+	done
+	
+	local text=${paramText:-`caller 0`}
+	local lenText=${#text}
+	local color=${paramColor:-$globalResetColor}
+	local caracSeparator=${paramCar:-"-"}
+	local caracSeparatorStart=${paramCarStart:-$caracSeparator}
+	local caracSeparatorEnd=${paramCarEnd:-$caracSeparator}
+	local nbChaine=${paramSize:-150}
+
+	logInfo --text="$globalGras$(stringSeparatorStart)$globalResetColor ${color}${text}${globalResetColor} $globalGras$(stringSeparatorEnd)$globalResetColor"
+}
+
+function logVerbose {
+	if $globalVerbose; then
+		logInfo "$@"
+	fi
+}
+
+function logError {
+	logInfo "$1" --color="$globalRouge"
+}
+
+function logWarn {
+	logInfo "$1" --color="$globalJaune"
+}
+
+function logVerboseNiv1 {
+	local paramText
+	
+	for param in "$@"; do
+		case "$param" in
+			--text=*)
+				paramText=${param#-*=};;
+		esac
+	done
+	local text=${paramText:-`caller 0`}
+	logVerbose --text="--- $text ---" --color="$globalVert$globalGras"
+}
+
+function logVerboseNiv2 {
+	local paramText
+	
+	for param in "$@"; do
+		case "$param" in
+			--text=*)
+				paramText=${param#-*=};;
+		esac
+	done
+	local text=${paramText:-`caller 0`}
+	logVerbose --text="\t- $text -" --color="$globalVert$globalItalique"
+}

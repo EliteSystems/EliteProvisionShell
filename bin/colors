@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Colors
+globalColorReset='0'
+globalColorStart='\033['
+globalColorStop='m'
+globalResetColor="${globalColorStart}${globalColorDefaut}${globalColorStop}"
+if $globalColor; then
+	globalNoir="${globalColorStart}30${globalColorStop}"
+	globalRouge="${globalColorStart}31${globalColorStop}"
+	globalVert="${globalColorStart}32${globalColorStop}"
+	globalJaune="${globalColorStart}33${globalColorStop}"
+	globalBleu="${globalColorStart}34${globalColorStop}"
+	globalRose="${globalColorStart}35${globalColorStop}"
+	globalCyan="${globalColorStart}36${globalColorStop}"
+	globalGris="${globalColorStart}37${globalColorStop}"
+	globalGras="${globalColorStart}1${globalColorStop}"
+	globalGamma="${globalColorStart}2${globalColorStop}"
+	globalItalique="${globalColorStart}3${globalColorStop}"
+	globalSouligne="${globalColorStart}4${globalColorStop}"
+	globalClignotant="${globalColorStart}5${globalColorStop}"
+	globalSurligner="${globalColorStart}7${globalColorStop}"
+else
+	globalNoir="$globalResetColor"
+	globalRouge="$globalResetColor"
+	globalVert="$globalResetColor"
+	globalJaune="$globalResetColor"
+	globalBleu="$globalResetColor"
+	globalRose="$globalResetColor"
+	globalCyan="$globalResetColor"
+	globalGras="$globalResetColor"
+	globalGris="$globalResetColor"
+	globalGamma="$globalResetColor"
+	globalItalique="$globalResetColor"
+	globalSouligne="$globalResetColor"
+	globalClignotant="$globalResetColor"
+	globalSurligner="$globalResetColor"
+fi

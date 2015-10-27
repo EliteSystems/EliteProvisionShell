@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Debug variable
+function debugVar {
+	
+	local paramVar
+	local paramValue
+	
+	for param in "$@"; do
+		case "$param" in
+			--var=*)
+				paramVar=${param#-*=} ;;
+			--value=*)
+				paramValue=${param#-*=} ;;
+		esac
+	done
+	
+	local debug=$globalDebug
+	local var=${paramVar:-"Undefined"}
+	local value=${paramValue:-"Undefined"}
+	local caller=`caller 0`
+	local script=${caller##*/}
+
+	if $debug; then
+		echo -e "[${globalCyan}debug${globalResetColor}] ${script%.*} : ${globalGras}\$${var}${globalResetColor} = ${globalGamma}${value}${globalResetColor}"
+	fi
+}
+
+# Debug pause script
+function debugRead {
+
+	local paramPrompt
+	local retour
+	
+	for param in "$@"; do
+		case "$param" in
+			--prompt=*)
+				paramPrompt=${param#-*=} ;;
+		esac
+	done
+	
+	local debug=$globalDebug
+	local prompt=${paramPrompt:-"Debug"}
+
+	if $debug; then
+		read -p "[debug] $prompt" retour
+		echo "$retour"
+	fi
+}

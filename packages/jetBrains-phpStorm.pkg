@@ -1,0 +1,11 @@
+#!/bin/bash
+
+(
+	# Installation de phpStorm
+	name="phpStorm"
+	url="http://download-cf.jetbrains.com/webide/PhpStorm-9.0.2.tar.gz"
+	installPath="$HOME/Developpements/Applications/JetBrains"
+	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
+		configurePackage --packageName="$name" --packagePath="$installPath"
+	fi
+)

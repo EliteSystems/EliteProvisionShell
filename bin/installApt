@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# installation d'un package par APT
+function installPackage {
+	
+	# Ajout d'un repository APT
+	function addPackagesRepository {
+		
+		local paramRepository
+		local paramKey
+		
+		for param in "$@"; do
+			case "$param" in
+				--repository=*)
+					paramRepository=${param#-*=} ;;
+				--key=*)
+					paramKey=${param#-*=} ;;
+			esac
+		done
+		
+		local repository=${paramRepository}
+		debugVar --var="repository" --value="$repository"
+		local key=${paramKey}
+		debugVar --var="key" --value="$key"
+		
+		# Erreur si aucun repository n'est passé
+		if [ -z "$repository" ]; then
+			return 1
+		fi
+		
+		# Ajout de la clé privée du PPA
+		if [ ! -z "$key" ]; then
+			logVerboseNiv1 --text="Ajout de la clé privée ($key) pour le repository $repository"
+			curl -sL "$key" | sudo apt-key add -
+		fi
+
+		# Ajout du repository demandé
+		logVerboseNiv1 --text="Ajout du repository de packages $repository"
+		sudo add-apt-repository --yes "$repository"
+		
+		return 0
+	}
+	
+	local paramName
+	local paramRepository
+	
+	for param in "$@"; do
+		case "$param" in
+			--packageName=*)
+				paramName=${param#-*=} ;;
+			--repository=*)
+				paramRepository=${param#-*=} ;;
+		esac
+	done
+	
+	local name=${paramName}
+	debugVar --var="name" --value="$name"
+	local repository=${paramRepository}
+	debugVar --var="repository" --value="$repository"
+	
+	# Installation du paquet passé en paramètre si nécessaire
+	if ! isInstalledPackage "$@" || $globalForce; then
+		
+		logVerboseNiv1 --text="Installation de $name"
+
+		if [ ! -z "$repository" ]; then
+			addPackagesRepository "$@"
+		fi
+		sudo apt-get -qq update --yes > /dev/null && sudo apt-get -qq install "$name" --yes
+		
+		if ! isInstalledPackage "$@"; then
+			return 1
+		fi
+
+		return 0
+	fi
+	
+	return 2
+}
+
+# Vérification de l'installation d'un package
+function isInstalledPackage {
+
+	local paramName
+	
+	for param in "$@"; do
+		case "$param" in
+			--packageName=*)
+				paramName=${param#-*=} ;;
+		esac
+	done
+	
+	local name=${paramName}
+	debugVar --var="name" --value="$name"
+
+	if dpkg --get-selections | grep -Eqx "$name(:(\w)*)?(\s)*install"; then
+		logVerboseNiv1 --text="$name already installed"
+		return 0
+	else
+		return 1
+	fi
+}

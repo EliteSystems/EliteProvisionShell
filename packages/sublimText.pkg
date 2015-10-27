@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Sublime text
+name="sublime-text-installer"
+repository="ppa:webupd8team/sublime-text-3"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	name="sublime-text"
+	configurePackage --packageName="$name"
+fi

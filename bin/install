@@ -1,0 +1,66 @@
+#!/bin/bash 
+
+# Execute les scripts d'installation
+function installPkg {
+	(
+		local paramPattern
+
+		for param in "$@"; do
+			case "$param" in
+				--pattern=*)
+					paramPattern=${param#-*=} ;;
+			esac
+		done
+
+		local packageExtension="*.pkg"
+		debugVar --var="packageExtension" --value="$packageExtension"
+		local pattern=${paramPattern:-$packageExtension}
+		debugVar --var="pattern" --value="$pattern"
+
+		for installFile in $globalInstallPath/*${pattern}${packageExtension}; do
+			debugVar --var="installFile" --value="$installFile"
+			logSeparator --text="<${installFile##*/}>" --color="$globalBleu$globalGras" --separator="." --size="100"
+			source "$installFile"
+			debugRead --prompt="Suivant ??"
+		done
+	)
+}
+
+function installProfile {
+	(
+		local paramProfil
+
+		for param in "$@"; do
+			case "$param" in
+				--profil=*)
+					paramProfil=${param#-*=} ;;
+			esac
+		done
+
+		if [ -z paramProfil ]; then
+			logError --text="Paramètre --profil requis"
+			return 1
+		fi
+
+		local profilExtension=".profil"
+		debugVar --var="profilExtension" --value="$profilExtension"
+		local profilName="${paramProfil}$profilExtension"
+		debugVar --var="profilName" --value="$profilName"
+
+		# Installations
+		if [ -e "$globalProfilsPath/${profilName}" ]; then
+			logSeparator --text="<${profilName}>" --color="$globalRouge$globalGras" --separator="_" --size="150"
+			for line in $(cat --squeeze-blank "$globalProfilsPath/$profilName"); do
+				if echo "$line" | grep "P:" > /dev/null; then
+					installProfile --profil="${line#P:}"
+				else
+					installPkg --pattern="$line"
+				fi
+			done
+			logSeparator --text="Fin" --color="$globalRouge$globalGras" --size="150"
+		else
+			logError --text="Profil \"$profilName\" inexistant"
+			return 1
+		fi
+	)
+}

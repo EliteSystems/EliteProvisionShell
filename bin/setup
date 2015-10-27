@@ -1,0 +1,10 @@
+#!/bin/bash 
+
+
+function setupProject {
+	local sourceFile="$globalWorkingPath/eliteProvision"
+	local destinationFile="/usr/local/bin/eliteProvision"
+	echo "bash $sourceFile \"\$@\"" | sudo tee "$destinationFile" > /dev/null
+	sudo chmod 755 "$destinationFile"
+	return 0
+}

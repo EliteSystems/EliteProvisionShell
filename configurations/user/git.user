@@ -1,0 +1,37 @@
+#!/bin/bash
+
+(
+	# Initialisation variables ----------
+	NOM=
+	Prenom=
+	email=
+
+	while [ -z $NOM ]; do
+		read -p "Nom de l'utilisateur git : " NOM
+	done
+
+	while [ -z $Prenom ]; do
+		read -p "Prénom de l'utilisateur git : " Prenom
+	done
+
+	while [ -z $email ]; do
+		read -p "Email de l'utilisateur git : " email
+	done
+
+	# Configuration Git Globale (~/.gitconfig) -- ( ${#VAR} retourne la taille de VAR )
+	if [ ${#NOM} -gt 0 ] && [ ${#Prenom} -gt 0 ] && [ ${#email} -gt 0 ]; then
+		git config --global user.name "$NOM $Prenom"
+		git config --global user.email "$email"
+	fi
+
+	# Git Ignore global
+	gitIgnore="$HOME/.gitignore"
+	if [ ! -e $gitIgnore ]; then
+		touch $gitIgnore
+	fi
+	grep "# Ignore tmp repositories" $gitIgnore > /dev/null || echo "# Ignore tmp repositories" >> $gitIgnore
+	grep "tmp/" $gitIgnore > /dev/null || echo "tmp/" >> $gitIgnore
+	grep "# Ignore old files" $gitIgnore > /dev/null || echo -e "\n# Ignore old files" >> $gitIgnore
+	grep "*.old" $gitIgnore > /dev/null || echo -e "*.old\n*.old/" >> $gitIgnore
+	git config --global core.excludesfile $gitIgnore
+)

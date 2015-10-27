@@ -1,0 +1,113 @@
+#!/bin/bash 
+
+for param in "$@"; do
+	case "$param" in
+		-v|--verbose)
+			paramVerbose=true ;;
+		-d|--debug)
+			paramDebug=true ;;
+		-c|--configure)
+			paramConfigure=true ;;
+		-f|--force)
+			paramForce=true ;;
+		-n|--no-clean)
+			paramClean=false ;;
+		-h|--help)
+			paramHelp=true ;;
+		-l|--list)
+			paramList=true ;;
+		-s|--setup)
+			paramSetup=true ;;
+		--no-color)
+			paramColor=false ;;
+		--pattern=*)
+			paramPattern=${param#-*=} ;;
+		--profil=*)
+			paramProfilName=${param#-*=}
+			paramProfil=true ;;
+	esac
+done
+
+# Initialisation variables environnement
+globalDebug=${paramDebug:-false}
+globalVerbose=${paramVerbose:-false}
+globalConfigure=${paramConfigure:-false}
+globalForce=${paramForce:-false}
+globalClean=${paramClean:-true}
+globalHelp=${paramHelp:-false}
+globalSetup=${paramSetup:-false}
+globalPattern=${paramPattern}
+globalColor=${paramColor:-true}
+globalProfil=${paramProfil:-false}
+globalList=${paramList:-false}
+globalWorkingPath="$(cd "$(dirname "$0")" && pwd)"
+globalBinPath=$globalWorkingPath/bin
+globalInstallPath=$globalWorkingPath/packages
+globalConfigPath=$globalWorkingPath/configurations
+globalConfigUserPath=$globalConfigPath/user
+globalAssetsPath=$globalWorkingPath/assets
+globalTemporaryPath=$globalWorkingPath/tmp
+globalProfilsPath=$globalWorkingPath/profiles
+globalProfilName=${paramProfilName}
+
+# Include des fonctions
+for binFile in $globalBinPath/*; do
+   source "$binFile"
+done
+
+# Aide
+if $globalHelp; then
+	logInfo --text="${globalGras}${globalSouligne}Liste des options${globalResetColor}${globalGras}"
+	echo -e "-v|--verbose)\n-d|--debug)\n-c|--configure)\n-f|--force)\n-n|--no-clean)\n-h|--help)\n-l|--list)\n--pattern=)\n--no-color)\n--profil=)"
+	exit 0
+fi
+
+# Liste les profils
+if $globalList; then
+	(
+		logInfo --text="${globalGras}${globalSouligne}LISTE DE TOUS LES PACKAGES${globalResetColor}${globalGras}"
+		for installFile in $globalInstallPath/*; do
+			installFileWithoutPrefixe=${installFile##*/}
+			logInfo --text="  - ${installFileWithoutPrefixe%.*}" --color="$globalJaune"
+		done		
+		logInfo --text="\n${globalGras}${globalSouligne}LISTE DE TOUS LES PROFILS${globalResetColor}${globalGras}"
+		for profilFile in $globalProfilsPath/*; do
+			profileFileWithoutPath=${profilFile##*/}
+			logInfo --text="  ${profileFileWithoutPath%.*}" --color="$globalItalique$globalBleu"
+			for line in $(cat --squeeze-blank "$profilFile"); do
+				logInfo --text="    - ${line#*-}" --color="$globalCyan"
+			done
+		done
+	) | less -R
+	exit 0
+fi
+
+if $globalSetup; then
+	setupProject
+	exit 0
+fi
+
+# Conditions d'erreurs
+if [ -z $paramPattern ] && ! $globalProfil; then
+	logError --text="Paramètre --profil ou --pattern requis"
+	exit 1
+fi
+
+# Répertoire de travail
+if [ ! -d "$globalTemporaryPath" ]; then
+	mkdir --parents "$globalTemporaryPath"
+fi
+
+# Installations
+if $globalProfil; then
+	installProfile --profil="$globalProfilName"
+else 
+	installPkg --pattern="$globalPattern"
+fi
+
+# Nettoyage du système
+if $globalClean; then
+	cleanAll
+fi
+
+exit 0

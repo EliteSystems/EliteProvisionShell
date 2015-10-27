@@ -1,0 +1,11 @@
+#!/bin/bash
+
+(
+	# Installation de pyCharm
+	name="pyCharm"
+	url="https://d1opms6zj7jotq.cloudfront.net/python/pycharm-professional-4.5.4.tar.gz"
+	installPath="$HOME/Developpements/Applications/JetBrains"
+	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
+		configurePackage --packageName="$name" --packagePath="$installPath"
+	fi
+)

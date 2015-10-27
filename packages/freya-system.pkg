@@ -1,0 +1,7 @@
+#!/bin/bash
+
+(
+	# Configuration OS
+	name="system"
+	configurePackage --packageName="$name"
+)

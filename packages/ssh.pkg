@@ -1,0 +1,24 @@
+#!/bin/bash
+
+(
+	
+	# Installation de OpenSSh Server
+	name="openssh-server"
+	if installPackage --packageName="$name" || $globalConfigure; then
+		name="ssh"
+		configurePackage --packageName="$name"
+	fi
+
+	# Création du répertoire .ssh
+	sshRepository="$HOME/.ssh"
+	if [ ! -d "$sshRepository" ]; then
+		mkdir --mode 700 "$sshRepository"
+	fi
+
+	# Création du fichier authorized_keys
+	sshAuthorizedKey="$sshRepository/authorized_keys"
+	if [ ! -f "$sshAuthorizedKey" ]; then
+		touch "$sshAuthorizedKey"
+		chmod 600 "$sshAuthorizedKey"
+	fi
+)

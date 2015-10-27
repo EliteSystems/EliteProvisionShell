@@ -1,0 +1,9 @@
+#!/bin/bash
+
+(
+	# Installation de Firefox
+	name="firefox"
+	if installPackage --packageName="$name" || $globalConfigure; then
+		configurePackage --packageName="$name"
+	fi
+)

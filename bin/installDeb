@@ -1,0 +1,45 @@
+#!/bin/bash
+
+function installDeb {
+	
+	local paramName
+	local paramUrl
+	
+	for param in "$@"; do
+		case "$param" in
+			--packageName=*)
+				paramName=${param#-*=} ;;
+			--packageUrl=*)
+				paramUrl=${param#-*=} ;;
+		esac
+	done
+
+	local name=${paramName}
+	debugVar --var="name" --value="$name"
+	local url=${paramUrl}
+	debugVar --var="url" --value="$url"
+	local path=${paramPath:-Developpements/Applications}
+	debugVar --var="path" --value="$path"
+
+	# Installation Package .deb
+	if  ! isInstalledPackage "$@" || $globalForce; then
+		
+		logVerboseNiv1 --text="Installation de $name"
+
+		if  [ ! -e "$globalTemporaryPath/$name.deb" ]; then
+			logVerboseNiv2 --text="Start download"
+			wget --no-verbose --output-document "$globalTemporaryPath/$name.deb" "$url" > /dev/null
+			logVerboseNiv2 --text="Stop download"
+		fi
+
+		sudo dpkg -i "$globalTemporaryPath/$name.deb"
+
+		if ! isInstalledPackage "$@"; then
+			return 1
+		fi
+
+		return 0
+	fi
+
+	return 2
+}

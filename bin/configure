@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function configurePackage {
+	
+	local paramName
+	local paramPath
+	local extensionConf=.conf
+	local extensionUser=.user
+	
+	for param in "$@"; do
+		case "$param" in
+			--packageName=*)
+				paramName=${param#-*=} ;;
+			--packagePath=*)
+				paramPath=${param#-*=} ;;
+		esac
+	done
+
+	local name=${paramName}
+	debugVar --var="name" --value="$name"
+	local path=${paramPath}
+	debugVar --var="path" --value="$path"
+
+	if [ -f "$globalConfigPath/$name$extensionConf" ]; then
+
+		logVerboseNiv1 --text="Configuration de $name"
+		source "$globalConfigPath/$name$extensionConf" "$@"
+
+		if [ -f "$globalConfigUserPath/$name$extensionUser" ]; then
+			logVerboseNiv1 --text="Configuration utilisateur de $name"
+			source "$globalConfigUserPath/$name$extensionUser" "$@"
+		fi
+		
+	fi
+
+	return 0
+}
