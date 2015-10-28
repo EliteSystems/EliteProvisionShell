@@ -1,0 +1,30 @@
+#!/bin/bash 
+
+function parameters {
+
+	case "$1" in
+		c|--color)
+			paramColor=true ;;
+		C|--configure)
+			paramConfigure=true ;;
+		d|--debug)
+			paramDebug=true ;;
+		h|--help)
+			paramHelp=true ;;
+		i|--force-install)
+			paramForce=true ;;
+		l|--list)
+			paramList=true ;;
+		n|--no-clean)
+			paramClean=false ;;
+		s|--setup)
+			paramSetup=true ;;
+		v|--verbose)
+			paramVerbose=true ;;
+		--pattern=*)
+			paramPattern=${param#-*=} ;;
+		--profil=*)
+			paramProfilName=${param#-*=}
+			paramProfil=true ;;
+	esac
+}
