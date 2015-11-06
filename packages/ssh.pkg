@@ -7,6 +7,7 @@
 	if installPackage --packageName="$name" || $globalConfigure; then
 		name="ssh"
 		configurePackage --packageName="$name"
+		manageFirewall --service="22/tcp" --inout
 	fi
 
 	# Création du répertoire .ssh

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Dos2Unix
+name="dos2unix"
+if installPackage --packageName="$name" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi

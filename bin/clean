@@ -27,7 +27,7 @@ function cleanSavedUserFiles {
 
 # Nettoyage des fichiers .old du répertoire utilisateur (NE PAS FAIRE DE SUDO !!!)
 function cleanOldFiles {
-	find ~/ -name '*.old' -print0 | xargs -0 sudo rm > /dev/null
+	find ~/ -name '*.old' -print0 | xargs -0 rm > /dev/null
 }
 
 # Nettoyage du répertoire temporaire de travail (NE PAS FAIRE DE SUDO !!!)

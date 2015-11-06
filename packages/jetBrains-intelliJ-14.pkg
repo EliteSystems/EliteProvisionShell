@@ -1,8 +1,8 @@
 #!/bin/bash
 
 (
-	# Installation d'intelliJ
-	name="intelliJ"
+	# Installation d'intelliJ 14
+	name="intelliJ14"
 	url="https://download.jetbrains.com/idea/ideaIU-14.1.5.tar.gz"
 	installPath="$HOME/Developpements/Applications/JetBrains"
 	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then

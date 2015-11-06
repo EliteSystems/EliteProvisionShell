@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Vim
+name="vim"
+if installPackage --packageName="$name" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi

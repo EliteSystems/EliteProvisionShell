@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# gParted
+name="gparted"
+repository="ppa:andykimpe/gparted"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi

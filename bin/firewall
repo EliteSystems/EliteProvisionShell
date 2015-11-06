@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# installation d'un package par APT
+function manageFirewall {
+
+	function isActiveUFW {
+
+		if sudo ufw status | grep -qw "acti(ve|f)"; then
+			return 0
+		else
+			logVerboseNiv1 --text="firewall ufw not active"
+			return 1
+		fi
+
+	}
+
+	function manageFirewallUFW {
+
+		local paramService
+		local paramIn
+		local paramOut
+		
+		for param in "$@"; do
+			case "$param" in
+				--service=*|--port=*)
+					paramService=${param#-*=} ;;
+				--in)
+					paramInOut=1 ;;
+				--out)
+					paramInOut=2 ;;
+				--inout)
+					paramInOut=3 ;;
+			esac
+		done
+		
+		local service=${paramService}
+		debugVar --var="service" --value="$service"
+		local inout=${paramInOut:-1}
+		debugVar --var="inout" --value="$inout"
+
+		if isInstalledPackage --packageName="ufw"; then
+
+			if [ $inout -eq 1 ] || [ $inout -eq 3 ]; then
+				logVerboseNiv1 --text="ufw : writing incoming rules for $service"
+				sudo ufw allow in "$service" > /dev/null
+			fi
+
+			if [ $inout -eq 2 ] || [ $inout -eq 3 ]; then
+				logVerboseNiv1 --text="ufw : writing outgoing rules for $service"
+				sudo ufw allow out "$service" > /dev/null
+			fi
+
+			return 0
+		fi
+
+		return 1
+
+	}
+
+	if ! manageFirewallUFW "$@"; then
+		logError --text="No firewall rules writing for $service"
+		# manageFirewallIPTables "$@"
+	fi
+
+}

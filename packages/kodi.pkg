@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Sublime text
+name="kodi"
+repository="ppa:team-xbmc/ppa"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi

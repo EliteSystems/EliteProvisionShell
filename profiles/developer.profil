@@ -1,7 +1,10 @@
 ssh
+dos2unix
+P:editor
 git
 freya
+tmux
 conkyManager
-sublimText
 P:browser
 P:java
+ufw
