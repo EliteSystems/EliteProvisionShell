@@ -53,7 +53,7 @@ function installArchive {
 
 			# Installation
 			mkdir "$path/$name"
-			tar xzf "$globalTemporaryPath/$name.tar.gz" -C "$path/$name" --strip-components 1
+			tar -xzf "$globalTemporaryPath/$name.tar.gz" -C "$path/$name" --strip-components 1
 			chmod -Rf 755 "$path/$name"
 
 			# Erreur

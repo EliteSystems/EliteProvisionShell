@@ -3,7 +3,10 @@
 (
 	# Installation d'intelliJ 14
 	name="intelliJ14"
+	# ultimate
 	url="https://download.jetbrains.com/idea/ideaIU-14.1.5.tar.gz"
+	# Community
+	# url="https://download.jetbrains.com/idea/ideaIC-14.1.5.tar.gz"
 	installPath="$HOME/Developpements/Applications/JetBrains"
 	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
 		configurePackage --packageName="$name" --packagePath="$installPath"

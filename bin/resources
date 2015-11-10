@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Récupère un Asset
+function getAssetResource {
+	local name="$1"
+	if [ -e "${globalOverrideAssetsPath}/${name}" ]; then
+		logWarn --text="Using override Asset [$name]"
+		resource="${globalOverrideAssetsPath}/${name}"
+	else
+		resource="${globalAssetsPath}/${name}"
+	fi
+	return 0
+}
+
+# Récupère une Configuration
+function getConfigResource {
+	local name="$1"
+	if [ -e "${globalOverrideConfigPath}/${name}" ]; then
+		logWarn --text="Using override Configuration [$name]"
+		resource="${globalOverrideConfigPath}/${name}"
+	else
+		resource="${globalConfigPath}/${name}"
+	fi
+	return 0
+}
+
+# Récupère un Package
+function getPkgResource {
+	local name="$1"
+	if [ -e "${globalOverrideInstallPath}/${name}" ]; then
+		logWarn --text="Using override Package [$name]"
+		resource="${globalOverrideInstallPath}/${name}"
+	else
+		resource="${globalInstallPath}/${name}"
+	fi
+	return 0
+}
+
+# Récupère un Profil
+function getPrfResource {
+	local name="$1"
+	if [ -e "${globalOverrideProfilesPath}/${name}" ]; then
+		logWarn --text="Using override Profile [$name]"
+		resource="${globalOverrideProfilesPath}/${name}"
+	else
+		resource="${globalProfilesPath}/${name}"
+	fi
+	return 0
+}

@@ -26,5 +26,9 @@ function parameters {
 		--profil=*)
 			paramProfilName=${param#-*=}
 			paramProfil=true ;;
+		--overridePath=*)
+			paramOverridePath=${param#-*=}
+			paramOverridePath=${paramOverridePath%/}
+			paramOverride="";;
 	esac
 }

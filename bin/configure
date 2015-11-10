@@ -4,8 +4,6 @@ function configurePackage {
 	
 	local paramName
 	local paramPath
-	local extensionConf=.conf
-	local extensionUser=.user
 	
 	for param in "$@"; do
 		case "$param" in
@@ -20,16 +18,17 @@ function configurePackage {
 	debugVar --var="name" --value="$name"
 	local path=${paramPath}
 	debugVar --var="path" --value="$path"
+	local extension=".conf"
+	debugVar --var="extension" --value="$extension"
+	local fileName="$name$extension"
+	debugVar --var="fileName" --value="$fileName"
+	getConfigResource "$fileName" && local configResource=$resource
+	debugVar --var="configResource" --value="$configResource"
 
-	if [ -f "$globalConfigPath/$name$extensionConf" ]; then
+	if [ -f "$configResource" ]; then
 
 		logVerboseNiv1 --text="Configuration de $name"
-		source "$globalConfigPath/$name$extensionConf" "$@"
-
-		if [ -f "$globalConfigUserPath/$name$extensionUser" ]; then
-			logVerboseNiv1 --text="Configuration utilisateur de $name"
-			source "$globalConfigUserPath/$name$extensionUser" "$@"
-		fi
+		source "$configResource" "$@"
 		
 	fi
 

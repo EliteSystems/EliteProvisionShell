@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Colors
-globalColorReset='0'
 globalColorStart='\033['
 globalColorStop='m'
 globalResetColor="${globalColorStart}${globalColorDefaut}${globalColorStop}"

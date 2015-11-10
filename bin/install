@@ -12,54 +12,59 @@ function installPkg {
 			esac
 		done
 
-		local packageExtension="*.pkg"
-		debugVar --var="packageExtension" --value="$packageExtension"
-		local pattern=${paramPattern:-$packageExtension}
+		local extension="*.pkg"
+		debugVar --var="extension" --value="$extension"
+		local pattern=${paramPattern:-$extension}
 		debugVar --var="pattern" --value="$pattern"
 
-		for installFile in $globalInstallPath/*${pattern}${packageExtension}; do
-			debugVar --var="installFile" --value="$installFile"
-			logSeparator --text="<${installFile##*/}>" --color="$globalBleu$globalGras" --separator="." --size="100"
-			source "$installFile"
-			debugRead --prompt="Suivant ??"
+		for installFile in $globalInstallPath/*${pattern}${extension}; do
+			local fileName="${installFile##*/}"
+			debugVar --var="fileName" --value="$fileName"
+			getPkgResource "${fileName}" && local packageResource=$resource
+			debugVar --var="packageResource" --value="$packageResource"
+			logSeparator --text="<$fileName>" --color="$globalBleu$globalGras" --separator="." --size="100"
+			source "$packageResource"
+			debugRead --prompt="Next ??"
 		done
 	)
 }
 
 function installProfile {
 	(
-		local paramProfil
+		local paramProfile
 
 		for param in "$@"; do
 			case "$param" in
-				--profil=*)
-					paramProfil=${param#-*=} ;;
+				--profile=*)
+					paramProfile=${param#-*=} ;;
 			esac
 		done
 
-		if [ -z paramProfil ]; then
-			logError --text="Paramètre --profil requis"
+		if [ -z paramProfile ]; then
+			logError --text="Parameter --profile required"
 			return 1
 		fi
 
-		local profilExtension=".profil"
-		debugVar --var="profilExtension" --value="$profilExtension"
-		local profilName="${paramProfil}$profilExtension"
-		debugVar --var="profilName" --value="$profilName"
+		local profileExtension=".prf"
+		debugVar --var="profileExtension" --value="$profileExtension"
+		local profileName="${paramProfile}$profileExtension"
+		debugVar --var="profileName" --value="$profileName"
+		getPrfResource "$profileName" && local profileResource=$resource
+		debugVar --var="profileResource" --value="$profileResource"
 
 		# Installations
-		if [ -e "$globalProfilsPath/${profilName}" ]; then
-			logSeparator --text="<${profilName}>" --color="$globalRouge$globalGras" --separator="_" --size="150"
-			for line in $(cat --squeeze-blank "$globalProfilsPath/$profilName"); do
+		if [ -e "$profileResource" ]; then
+			logSeparator --text="<${profileName}>" --color="$globalRouge$globalGras" --separator="_" --size="150"
+			for line in $(cat --squeeze-blank "$profileResource"); do
 				if echo "$line" | grep "P:" > /dev/null; then
-					installProfile --profil="${line#P:}"
+					installProfile --profile="${line#P:}"
 				else
 					installPkg --pattern="$line"
 				fi
 			done
 			logSeparator --text="Fin" --color="$globalRouge$globalGras" --size="150"
 		else
-			logError --text="Profil \"$profilName\" inexistant"
+			logError --text="Profile \"$profileName\" not exist"
 			return 1
 		fi
 	)

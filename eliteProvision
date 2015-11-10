@@ -2,20 +2,19 @@
 
 # Paths
 globalWorkingPath="$(cd "$(dirname "$0")" && pwd)"
-globalBinPath=$globalWorkingPath/bin
-globalInstallPath=$globalWorkingPath/packages
-globalConfigPath=$globalWorkingPath/configurations
-globalConfigUserPath=$globalConfigPath/user
-globalAssetsPath=$globalWorkingPath/assets
-globalTemporaryPath=$globalWorkingPath/tmp
-globalProfilsPath=$globalWorkingPath/profiles
-
-# Include bin
-for binFile in $globalBinPath/*; do
-   source "$binFile"
-done
+globalAssetsDirectory="assets"
+globalConfDirectory="configurations"
+globalPkgDirectory="packages"
+globalPrfDirectory="profiles"
+globalBinPath="$globalWorkingPath/bin"
+globalTemporaryPath="$globalWorkingPath/tmp"
+globalAssetsPath="$globalWorkingPath/$globalAssetsDirectory"
+globalConfigPath="$globalWorkingPath/$globalConfDirectory"
+globalInstallPath="$globalWorkingPath/$globalPkgDirectory"
+globalProfilesPath="$globalWorkingPath/$globalPrfDirectory"
 
 # Parameters
+source "$globalBinPath/parameters"
 for param in "$@"; do
 	case "$param" in
 		--*)
@@ -40,15 +39,24 @@ globalColor=${paramColor:-false}
 globalProfil=${paramProfil:-false}
 globalList=${paramList:-false}
 globalProfilName=${paramProfilName}
+globalOverrideAssetsPath="${paramOverridePath:-$globalWorkingPath}/${globalAssetsDirectory}${paramOverride-/user}"
+globalOverrideConfigPath="${paramOverridePath:-$globalWorkingPath}/${globalConfDirectory}${paramOverride-/user}"
+globalOverrideInstallPath="${paramOverridePath:-$globalWorkingPath}/${globalPkgDirectory}${paramOverride-/user}"
+globalOverrideProfilesPath="${paramOverridePath:-$globalWorkingPath}/${globalPrfDirectory}${paramOverride-/user}"
+
+# Include bin
+for binFile in $globalBinPath/*; do
+   source "$binFile"
+done
 
 # Help
 if $globalHelp; then
 	logInfo --text="${globalGras}${globalSouligne}Liste des options${globalResetColor}${globalGras}"
-	echo -e "c|--color)\nC|--configure)\nd|--debug)\nh|--help)\ni|--force-install)\nl|--list)\nn|--no-clean)\ns|--setup)\nv|--verbose\n--pattern=)\n--profil=)"
+	echo -e "c|--color)\nC|--configure)\nd|--debug)\nh|--help)\ni|--force-install)\nl|--list)\nn|--no-clean)\ns|--setup)\nv|--verbose\n--pattern=)\n--profil=)\n--overridePath=)"
 	exit 0
 fi
 
-# Profiles
+# List Profiles
 if $globalList; then
 	(
 		logInfo --text="${globalGras}${globalSouligne}LISTE DE TOUS LES PACKAGES${globalResetColor}${globalGras}"
@@ -57,12 +65,14 @@ if $globalList; then
 			logInfo --text="  - ${installFileWithoutPrefixe%.*}" --color="$globalJaune"
 		done		
 		logInfo --text="\n${globalGras}${globalSouligne}LISTE DE TOUS LES PROFILS${globalResetColor}${globalGras}"
-		for profilFile in $globalProfilsPath/*; do
-			profileFileWithoutPath=${profilFile##*/}
-			logInfo --text="  ${profileFileWithoutPath%.*}" --color="$globalItalique$globalBleu"
-			for line in $(cat --squeeze-blank "$profilFile"); do
-				logInfo --text="    - ${line#*-}" --color="$globalCyan"
-			done
+		for profileFile in $globalProfilesPath/*; do
+			if [ ! -d $profileFile ]; then
+				profileFileWithoutPath=${profileFile##*/}
+				logInfo --text="  ${profileFileWithoutPath%.*}" --color="$globalItalique$globalBleu"
+				for line in $(cat --squeeze-blank "$profileFile"); do
+					logInfo --text="    - ${line#*-}" --color="$globalCyan"
+				done
+			fi
 		done
 	) | less -R
 	exit 0
@@ -79,6 +89,10 @@ if [ -z $paramPattern ] && ! $globalProfil; then
 	logError --text="Paramètre --profil ou --pattern requis"
 	exit 1
 fi
+if [ -z $paramOverride ] && [ ! -d $paramOverridePath ]; then
+	logError --text="Répertoire de surcharge introuvable (--overridePath error)"
+	exit 1
+fi
 
 # Temporary directory
 if [ ! -d "$globalTemporaryPath" ]; then
@@ -87,7 +101,7 @@ fi
 
 # Provision
 if $globalProfil; then
-	installProfile --profil="$globalProfilName"
+	installProfile --profile="$globalProfilName"
 else 
 	installPkg --pattern="$globalPattern"
 fi
