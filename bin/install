@@ -54,7 +54,7 @@ function installProfile {
 
 		# Installations
 		if [ -e "$profileResource" ]; then
-			logSeparator --text="<${profileName}>" --color="$globalRouge$globalGras" --separator="_" --size="150"
+			logSeparator --text="<${profileName}>" --color="$globalRouge$globalGras" --separator="—" --size="150"
 			for line in $(cat --squeeze-blank "$profileResource"); do
 				if echo "$line" | grep "P:" > /dev/null; then
 					installProfile --profile="${line#P:}"
