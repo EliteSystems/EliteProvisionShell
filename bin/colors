@@ -3,6 +3,7 @@
 # Colors
 globalColorStart='\033['
 globalColorStop='m'
+globalColorDefaut=0
 globalResetColor="${globalColorStart}${globalColorDefaut}${globalColorStop}"
 if $globalColor; then
 	globalNoir="${globalColorStart}30${globalColorStop}"
