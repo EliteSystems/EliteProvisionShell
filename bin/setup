@@ -2,9 +2,38 @@
 
 
 function setupProject {
+
+	local paramOverride
+
+	for param in "$@"; do
+		case "$param" in
+			--overridePath=*)
+				substring='='
+				replacement="=\""
+				paramOverride=${param/$substring/$replacement}"\""
+		esac
+	done
+
+	logVerboseNiv1 --text="Setting up eliteProvision"
+
+	# Gestion alias bash
+	local aliasBash="alias EliteProvision='eliteProvision $paramOverride'"
+	debugVar --var="aliasBash" --value="$aliasBash"
+	local bashRC="$HOME/.bashrc"
+	debugVar --var="bashRC" --value="$bashRC"
+	if grep "alias EliteProvision=" "$bashRC" > /dev/null; then
+		sed -i -e "s,#\?alias EliteProvision.*,$aliasBash," "$bashRC"
+	else
+		echo "$aliasBash" | tee --append "$bashRC" > /dev/null
+	fi
+
+	# Ajout de la commande
 	local sourceFile="$globalWorkingPath/eliteProvision"
+	debugVar --var="sourceFile" --value="$sourceFile"
 	local destinationFile="/usr/local/bin/eliteProvision"
+	debugVar --var="destinationFile" --value="$destinationFile"
 	echo "bash $sourceFile \"\$@\"" | sudo tee "$destinationFile" > /dev/null
 	sudo chmod 755 "$destinationFile"
+
 	return 0
 }

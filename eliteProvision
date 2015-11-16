@@ -80,7 +80,7 @@ fi
 
 # Setup
 if $globalSetup; then
-	setupProject
+	setupProject "$@"
 	exit 0
 fi
 
