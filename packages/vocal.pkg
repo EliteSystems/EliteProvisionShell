@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# vocal
+name="vocal"
+repository="ppa:nathandyer/vocal-daily"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi

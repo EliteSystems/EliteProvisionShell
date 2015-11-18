@@ -1,0 +1,7 @@
+#!/bin/bash
+
+(
+	# Configuration du terminal bash
+	name="bashrc"
+	configurePackage --packageName="$name"
+)

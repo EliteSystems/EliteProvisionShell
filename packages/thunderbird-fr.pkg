@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Thunderbird : client de courrier electronique
+name="thunderbird-locale-fr"
+if installPackage --packageName="$name" || $globalConfigure; then
+	name="thunderbird"
+	configurePackage --packageName="$name"
+fi
