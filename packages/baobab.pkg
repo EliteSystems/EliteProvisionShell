@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Baobab : Analyseur d’utilisation des disques
+name="baobab"
+if installPackage --packageName="$name" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi
