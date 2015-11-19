@@ -1,0 +1,9 @@
+#!/bin/bash
+
+(
+	# Installation de Vagrant
+	name="vagrant"
+	if installPackage --packageName="$name" || $globalConfigure; then
+		configurePackage --packageName="$name"
+	fi
+)

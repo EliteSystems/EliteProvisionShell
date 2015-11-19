@@ -1,0 +1,19 @@
+#!/bin/bash
+
+(
+	# Installation de VirtualBox
+	name="virtualbox-5.0"
+	url="http://download.virtualbox.org/virtualbox/5.0.10/virtualbox-5.0_5.0.10-104061~Ubuntu~trusty_amd64.deb"
+	if installDeb --packageName="$name" --packageUrl="$url" || $globalConfigure; then
+		logVerboseNiv2 --text="Add Oracle_VM_VirtualBox_Extension_Pack"
+		version=$(VBoxManage --version|cut -dr -f1|cut -d'_' -f1)
+		extensionPackFile=Oracle_VM_VirtualBox_Extension_Pack-$version.vbox-extpack
+		urlExtensionPackFile=http://download.virtualbox.org/virtualbox/$version/$extensionPackFile
+		if  [ ! -e "$globalTemporaryPath/$extensionPackFile" ]; then
+			wget --no-verbose --output-document "$globalTemporaryPath/" "$urlExtensionPackFile" > /dev/null
+		fi
+		VBoxManage extpack install "$globalTemporaryPath/$extensionPackFile"
+		name="virtualbox"
+		configurePackage --packageName="$name"
+	fi
+)
