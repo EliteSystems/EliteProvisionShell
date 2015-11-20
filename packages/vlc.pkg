@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# VLC : Lecteur vidéo
+name="vlc"
+repository="ppa:videolan/stable-daily"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi
