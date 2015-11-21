@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Audacity : gestionnaire d'enregistrement et d'édition audio
+name="audacity"
+repository="ppa:audacity-team/daily"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi
