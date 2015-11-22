@@ -1,0 +1,11 @@
+#!/bin/bash
+
+(
+	# Installation du serveur ownCloud pour une distrib debian
+	name="owncloud"
+	repository="deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/Debian_8.0/ /"
+	key="http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_8.0/Release.key"
+	if installPackage --packageName="$name" --repository="$repository" --key="$key" || $globalConfigure; then
+		configurePackage --packageName="$name"
+	fi
+)
