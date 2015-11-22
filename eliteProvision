@@ -60,9 +60,14 @@ fi
 if $globalList; then
 	(
 		logInfo --text="${globalGras}${globalSouligne}LISTE DE TOUS LES PACKAGES${globalResetColor}${globalGras}"
+		local prefixInfoList
 		for installFile in $globalInstallPath/*; do
 			installFileWithoutPrefixe=${installFile##*/}
-			logInfo --text="  - ${installFileWithoutPrefixe%.*}" --color="$globalJaune"
+			prefixInfoList="[] "
+			if isInstalledPackage --packageName=${installFileWithoutPrefixe%.*}; then
+				prefixInfoList="[x]"
+			fi
+			logInfo --text="$prefixInfoList ${installFileWithoutPrefixe%.*}" --color="$globalJaune"
 		done		
 		logInfo --text="\n${globalGras}${globalSouligne}LISTE DE TOUS LES PROFILS${globalResetColor}${globalGras}"
 		for profileFile in $globalProfilesPath/*; do
