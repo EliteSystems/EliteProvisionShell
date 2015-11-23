@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# package utile pour pouvoir utiliser add-apt-repository
+name="software-properties-common"
+installPackage --packageName="$name"
+
+# Ajout de curl
+name="curl"
+installPackage --packageName="$name"
+
+# Configuration OS
+name="debian-system"
+configurePackage --packageName="$name"

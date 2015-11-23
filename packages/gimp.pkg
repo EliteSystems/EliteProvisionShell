@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# gimp : Editeur d'image
+name="gimp"
+repository="ppa:otto-kesselgulasch/gimp"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi

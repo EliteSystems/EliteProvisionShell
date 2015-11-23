@@ -2,6 +2,6 @@
 
 (
 	# Configuration OS
-	name="system"
+	name="freya-system"
 	configurePackage --packageName="$name"
 )
