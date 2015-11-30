@@ -1,0 +1,10 @@
+#!/bin/bash
+
+(
+	name="bash"
+	# Installation du shell bash
+	if installPackage --packageName="$name" || $globalConfigure; then
+		# Configuration du shell bash
+		configurePackage --packageName="$name"
+	fi
+)
