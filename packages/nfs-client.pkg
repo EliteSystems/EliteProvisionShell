@@ -1,0 +1,9 @@
+#!/bin/bash
+
+(
+	name="nfs-common"
+	# Installation des package pour utiliser les partage client (NFS)
+	if installPackage --packageName="$name" || $globalConfigure; then
+		configurePackage --packageName="$name"
+	fi
+)
