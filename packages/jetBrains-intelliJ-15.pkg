@@ -4,9 +4,9 @@
 	# Installation d'intelliJ 15
 	name="intelliJ15"
 	# Ultimate
-	url="https://download.jetbrains.com/idea/ideaIU-15.0.tar.gz"
+	url="https://download.jetbrains.com/idea/ideaIU-15.0.3.tar.gz"
 	# Community
-	# url="https://download.jetbrains.com/idea/ideaIC-15.0.tar.gz"
+	# url="https://download.jetbrains.com/idea/ideaIC-15.0.3.tar.gz"
 	installPath="$HOME/Developpements/Applications/JetBrains"
 	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
 		configurePackage --packageName="$name" --packagePath="$installPath"

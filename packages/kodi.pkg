@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Sublime text
+# Kodi - Multimédia
 name="kodi"
 repository="ppa:team-xbmc/ppa"
 if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then

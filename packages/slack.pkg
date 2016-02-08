@@ -1,0 +1,10 @@
+#!/bin/bash
+
+(
+	# Installation de Slack
+	name="slack"
+	url="https://slack-ssb-updates.global.ssl.fastly.net/linux_releases/slack-desktop-1.2.6-amd64.deb"
+	if installDeb --packageName="$name" --packageUrl="$url" || $globalConfigure; then
+		configurePackage --packageName="$name"
+	fi
+)

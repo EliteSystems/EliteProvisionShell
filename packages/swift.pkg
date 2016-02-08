@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Swift - Apple langage
+name="Swift"
+debugVar --var="name" --value="$name"
+if [ -z $overridableRepository ]; then
+	overridableRepository="$HOME/Developpements/Applications/$name"
+fi
+debugVar --var="overridableRepository" --value="$overridableRepository"
+if [ -z $overridableSwiftUrl ]; then
+	overridableSwiftUrl="https://swift.org/builds/ubuntu1510/swift-2.2-SNAPSHOT-2015-12-01-b/swift-2.2-SNAPSHOT-2015-12-01-b-ubuntu15.10.tar.gz"
+fi
+debugVar --var="overridableSwiftUrl" --value="$overridableSwiftUrl"
+swiftKeyServer="hkp://pool.sks-keyservers.net"
+debugVar --var="swiftKeyServer" --value="$swiftKeyServer"
+swiftKeys="https://swift.org/keys/all-keys.asc"
+debugVar --var="swiftKeys" --value="$swiftKeys"
+
+if !$globalForce && [ -d $overridableRepository ]; then
+	logVerboseNiv1 --text="$overridableName already installed"
+else
+	logVerboseNiv1 --text="Import PGP Keys"
+	wget -q -O - $swiftKeys | gpg --import -
+	logVerboseNiv1 --text="Refresh keys"
+	gpg --keyserver hkp://pool.sks-keyservers.net --refresh-keys Swift
+	downloadResource --resourceName="$name.tar.gz" --resourceUrl="$overridableSwiftUrl"
+	downloadResource --resourceName="$name.tar.gz.sig" --resourceUrl="${overridableSwiftUrl}.sig"
+	
+fi
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi

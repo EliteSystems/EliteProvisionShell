@@ -1,0 +1,10 @@
+#!/bin/bash
+
+(
+	# Installation de GitKraken
+	name="gitkraken"
+	url="https://release.gitkraken.com/linux/gitkraken-amd64.deb"
+	if installDeb --packageName="$name" --packageUrl="$url" || $globalConfigure; then
+		configurePackage --packageName="$name"
+	fi
+)

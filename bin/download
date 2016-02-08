@@ -1,0 +1,50 @@
+#!/bin/bash
+
+function downloadResource {
+	(
+		local paramUrl
+		local paramName
+
+		for param in "$@"; do
+			case "$param" in
+				--resourceUrl=*)
+					paramUrl=${param#-*=} ;;
+				--resourceName=*)
+					paramName=${param#-*=} ;;
+			esac
+		done
+
+		local url=${paramUrl}
+		debugVar --var="url" --value="$url"
+		local name=${paramName}
+		debugVar --var="name" --value="$name"
+
+		if  [ ! -e "$globalTemporaryPath/$name" ]; then
+			logVerboseNiv2 --text="Start downloading from $url ... please wait"
+			wget --no-verbose --output-document "$globalTemporaryPath/$name" "$url" > /dev/null
+			logVerboseNiv2 --text="Finish downloading to $globalTemporaryPath/$name"
+		fi
+	)
+}
+
+function verifyDownload {
+	(
+		local paramName
+		local paramSignature
+
+		for param in "$@"; do
+			case "$param" in
+				--resourceSignature=*)
+					paramSignature=${param#-*=} ;;
+				--resourceName=*)
+					paramName=${param#-*=} ;;
+			esac
+		done
+
+		local signature=${paramSignature}
+		debugVar --var="signature" --value="$signature"
+		local name=${paramName}
+		debugVar --var="name" --value="$name"
+		gpg --verify swift-<VERSION>-<PLATFORM>.tar.gz.sig
+	)
+}

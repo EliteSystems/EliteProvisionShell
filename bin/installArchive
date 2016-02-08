@@ -35,11 +35,7 @@ function installArchive {
 			fi
 
 			# Téléchargement de l'archive
-			if  [ ! -e "$globalTemporaryPath/$name.tar.gz" ]; then
-				logVerboseNiv2 --text="Start download"
-				wget --no-verbose --output-document "$globalTemporaryPath/$name.tar.gz" "$url" > /dev/null
-				logVerboseNiv2 --text="Stop download"
-			fi
+			downloadResource --resourceName="$name.tar.gz" --resourceUrl="$url"
 
 			# Suppression du répertoire .old
 			if [ -d "$path/$name.old" ]; then
