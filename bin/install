@@ -12,7 +12,7 @@ function installPkg {
 			esac
 		done
 
-		local extension="*.pkg"
+		local extension=".pkg"
 		debugVar --var="extension" --value="$extension"
 		local pattern=${paramPattern:-$extension}
 		debugVar --var="pattern" --value="$pattern"
@@ -56,6 +56,7 @@ function installProfile {
 		if [ -e "$profileResource" ]; then
 			logSeparator --text="<${profileName}>" --color="$globalRouge$globalGras" --separator="—" --size="150"
 			for line in $(cat --squeeze-blank "$profileResource"); do
+				debugVar --var="line" --value="$line"
 				if echo "$line" | grep "P:" > /dev/null; then
 					installProfile --profile="${line#P:}"
 				else

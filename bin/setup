@@ -24,8 +24,11 @@ function setupProject {
 	if grep "alias EliteProvision=" "$bashRC" > /dev/null; then
 		sed -i -e "s,#\?alias EliteProvision.*,$aliasBash," "$bashRC"
 	else
-		echo "$aliasBash" | tee --append "$bashRC" > /dev/null
+		echo -e "\n$aliasBash" | tee --append "$bashRC" > /dev/null
 	fi
+	
+	# Reload bashRC
+	source "$bashRC"
 
 	# Ajout de la commande
 	local sourceFile="$globalWorkingPath/eliteProvision"

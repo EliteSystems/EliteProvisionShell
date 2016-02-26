@@ -2,8 +2,8 @@
 
 (
 	# Installation de webStorm
-	name="webStorm"
-	url="http://download-cf.jetbrains.com/webstorm/WebStorm-10.0.4.tar.gz"
+	name="dataGrip1"
+	url="https://d1opms6zj7jotq.cloudfront.net/datagrip/datagrip-1.0.3-custom-jdk-linux.tar.gz"
 	installPath="$HOME/Developpements/Applications/JetBrains"
 	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
 		configurePackage --packageName="$name" --packagePath="$installPath"
