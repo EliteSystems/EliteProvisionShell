@@ -1,0 +1,19 @@
+#!/bin/bash 
+
+function verifyLF {
+
+	local paramPathFile
+	
+	for param in "$@"; do
+		case "$param" in
+			--pathFile=*)
+				paramPathFile=${param#-*=};;
+		esac
+	done
+	
+	if tail --lines 1 $paramPathFile | grep ""; then
+		return 0
+	else
+		return 1
+	fi
+}

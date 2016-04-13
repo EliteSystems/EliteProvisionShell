@@ -1,0 +1,12 @@
+#!/bin/bash
+
+(
+	# Installation d'intelliJ 16
+	name="intelliJ16"
+	# Ultimate
+	url="https://download.jetbrains.com/idea/ideaIU-2016.1.1.tar.gz"
+	installPath="$HOME/Developpements/Applications/JetBrains"
+	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
+		configurePackage --packageName="$name" --packagePath="$installPath"
+	fi
+)

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Rhythmbox : Lecteur audio
+name="rhythmbox"
+repository="ppa:fossfreedom/rhythmbox"
+if installPackage --packageName="$name" --repository="$repository" || $globalConfigure; then
+	configurePackage --packageName="$name"
+fi
