@@ -1,0 +1,12 @@
+#!/bin/bash
+
+(
+	# Installation de goLang
+	name="GoLang"
+	url="https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz"
+	installPath="$HOME/Developpements/Applications/"
+
+	if installArchive --archiveName="$name" --archiveUrl="$url" --archivePath="$installPath" || $globalConfigure; then
+		configurePackage --packageName="$name" --packagePath="$installPath"
+	fi
+)
